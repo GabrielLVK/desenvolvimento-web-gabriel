@@ -4,6 +4,14 @@ const PORT = 3000;
 const app = express();
 app.use(express.json());
 
+// Middleware para permitir CORS (origens diferentes)
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // permite qualquer origem (para teste)
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
 let usuarios = [
     { id: 1, nome: "Ana",    idade: 20 },
     { id: 2, nome: "Carlos", idade: 25 },
@@ -79,6 +87,38 @@ app.delete('/usuarios/:id', (req, res) => {
     }
     usuarios.splice(index, 1);
     return res.status(204).send();
+});
+
+// Array para armazenar os comentários (coloque no topo do arquivo, junto com 'let usuarios = [...]')
+let comentarios = [];
+
+// Rota POST para receber comentários do frontend
+app.post('/comentarios', (req, res) => {
+    console.log('Requisição recebida em /comentarios:', req.body);
+
+    const { nome, mensagem } = req.body;
+
+    // Validação básica
+    if (!nome?.trim() || !mensagem?.trim()) {
+        return res.status(400).json({ erro: "Nome e mensagem são obrigatórios" });
+    }
+
+    // Gera ID automático
+    const novoId = comentarios.length > 0
+        ? Math.max(...comentarios.map(c => c.id)) + 1
+        : 1;
+
+    const novoComentario = {
+        id: novoId,
+        nome: nome.trim(),
+        mensagem: mensagem.trim()
+    };
+
+    // Salva no array
+    comentarios.push(novoComentario);
+
+    // Retorna o comentário salvo (o frontend vai usar isso para renderizar)
+    return res.status(201).json(novoComentario);
 });
 
 app.listen(PORT, () => {
