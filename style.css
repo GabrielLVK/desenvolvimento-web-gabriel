@@ -1,0 +1,166 @@
+/* Reset básico - tira as margens e paddings padrão do navegador */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo geral do body */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f5f5; /* cinza bem claro */
+    color: #333; /* texto escuro */
+    line-height: 1.6; /* espaçamento entre linhas mais confortável */
+}
+
+/* Estilizando o header (cabeçalho com nome e descrição) */
+header {
+    background-color: #2c3e50; /* azul escuro bonito */
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+header h1 {
+    font-size: 2.8em; /* nome grande */
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.2em;
+    opacity: 0.9; /* levemente transparente pra ficar elegante */
+}
+
+/* Estilizando a seção da foto/avatar */
+section:has(img) {
+    text-align: center; /* centraliza tudo dentro da seção */
+}
+
+img {
+    max-width: 200px; /* tamanho máximo da foto */
+    height: auto; /* mantém proporção */
+    border-radius: 50%; /* foto redonda */
+    border: 5px solid #3498db; /* borda azul clara */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* sombra suave */
+    margin: 20px auto; /* espaço acima e abaixo */
+    display: block; /* força centralização */
+}
+
+section:has(img) p {
+    margin-top: 10px;
+    font-style: italic;
+    color: #666; /* cinza mais escuro */
+}
+
+/* Estilizando as seções de texto (Sobre mim, comentários, etc.) */
+section {
+    background-color: white;
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* sombra leve */
+}
+
+section h2 {
+    color: #2c3e50; /* azul escuro */
+    margin-bottom: 15px;
+    border-bottom: 2px solid #3498db; /* linha azul embaixo do título */
+    padding-bottom: 10px;
+}
+
+/* Estilizando os artigos (comentários fictícios e dinâmicos) */
+article {
+    background-color: #ecf0f1; /* cinza bem claro */
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 6px;
+    border-left: 5px solid #3498db; /* barra azul na esquerda */
+}
+
+article h3 {
+    color: #2980b9; /* azul médio */
+    margin-bottom: 8px;
+}
+
+/* Estilizando o formulário */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+    color: #34495e;
+}
+
+input[type="text"],
+textarea {
+    padding: 12px;
+    border: 1px solid #bdc3c7;
+    border-radius: 6px;
+    font-size: 1em;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+button[type="submit"] {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #2980b9; /* escurece um pouco ao passar o mouse */
+}
+
+/* Responsividade para mobile (telas menores que 768px) */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px; /* menos espaçamento lateral */
+    }
+
+    header {
+        padding: 30px 15px; /* menos padding no topo */
+    }
+
+    header h1 {
+        font-size: 2.2em; /* nome um pouco menor no celular */
+    }
+
+    img {
+        max-width: 150px; /* foto menor no mobile */
+    }
+
+    section {
+        padding: 20px; /* menos padding interno */
+        margin: 15px 0; /* menos margem entre seções */
+    }
+
+    button[type="submit"] {
+        padding: 10px 15px; /* botão menor */
+        font-size: 1em;
+    }
+
+    /* Troca de cores leves no mobile (exemplo suave) */
+    body {
+        background-color: #e8f4f8; /* azul bem claro no mobile */
+    }
+
+    section {
+        background-color: #ffffff;
+    }
+
+    article {
+        background-color: #f9fbfc; /* quase branco */
+        border-left-color: #e67e22; /* laranja em vez de azul */
+    }
+}
