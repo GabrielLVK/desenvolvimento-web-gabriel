@@ -1,119 +1,111 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Perfil - Gabriel Luiz</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>Gabriel Luiz</h1>
-        <p>Estudante de Desenvolvimento Web</p>
-    </header>
-
-    <main>
-        <section>
-            <h2>Sobre mim</h2>
-            <p>Olá! Sou Gabriel, moro em Planalto e estou estudando na Unochapecó.</p>
-        </section>
-
-        <section>
-            <h2>Meu avatar</h2>
-            <img src="avatar.jpg" alt="Avatar de Gabriel Luiz">
-            <p>Imagem do meu avatar.</p>
-        </section>
-
-        <section>
-            <h2>Deixe seu comentário fictício</h2>
-            
-            <form id="form-comentario">
-                <label for="nome">Seu nome:</label><br>
-                <input type="text" id="nome" name="nome" placeholder="Digite seu nome"><br><br>
-                
-                <label for="mensagem">Mensagem:</label><br>
-                <textarea id="mensagem" name="mensagem" rows="5" cols="50" placeholder="Escreva seu comentário aqui..."></textarea><br><br>
-                
-                <button type="submit">Enviar Comentário</button>
-            </form>
-        </section>
-
-        <section id="comentarios-dinamicos">
-            <h2>Comentários enviados (dinâmicos via JS)</h2>
-            <div id="lista-comentarios"></div>
-        </section>
-
-        <section>
-            <h2>Comentários fictícios</h2>
-            
-            <article>
-                <h3>Pedro</h3>
-                <p>Bom perfil</p>
-            </article>
-            
-            <article>
-                <h3>Garga</h3>
-                <p>Gostei de seu avatar</p>
-            </article>
-            
-            <article>
-                <h3>Zé</h3>
-                <p>Tá tudo bem bonito pia</p>
-            </article>
-        </section>
-
-    </main>
-
-    <footer>
-        <p>© 2026 Gabriel Luiz - Desenvolvimento Web</p>
-    </footer>
+    <title>FaceGran</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <script>
-        const form = document.getElementById('form-comentario');
-        const listaComentarios = document.getElementById('lista-comentarios');
-
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const nome = document.getElementById('nome').value.trim();
-            const mensagem = document.getElementById('mensagem').value.trim();
-
-            if (!nome || !mensagem) {
-                alert('Preencha nome e mensagem!');
-                return;
-            }
-
-            try {
-                // Envia para o backend
-                const response = await fetch('http://localhost:3000/comentarios', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome, mensagem })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Erro do servidor: ${response.status}`);
-                }
-
-                const novoComentario = await response.json();
-
-                // Renderiza o comentário retornado
-                const artigo = document.createElement('article');
-                artigo.innerHTML = `
-                    <h3>${novoComentario.nome}</h3>
-                    <p>${novoComentario.mensagem}</p>
-                `;
-                listaComentarios.appendChild(artigo);
-
-                // Limpa o form
-                form.reset();
-
-            } catch (error) {
-                console.error('Erro ao enviar comentário:', error);
-                alert('Erro ao enviar comentário. Verifique se o servidor está rodando em localhost:3000');
-            }
-        });
+    const tema = localStorage.getItem('tema') || 'light';
+    document.documentElement.setAttribute('data-bs-theme', tema);
     </script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="index.html">FaceGran</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="index.html">Feed</a></li>
+                <li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li>
+                <li class="nav-item"><a class="nav-link" href="config.html">Configuração</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4" style="max-width: 600px;">
+
+    <div class="card p-3 mb-4">
+        <h5>Criar comentário</h5>
+        <input id="nome" class="form-control mb-2" placeholder="Seu nome">
+        <textarea id="mensagem" class="form-control mb-2" placeholder="Escreva algo"></textarea>
+        <button id="btnEnviar" class="btn btn-primary">Postar</button>
+    </div>
+
+    <div id="feed"></div>
+
+</div>
+
+<script>
+const feed = document.getElementById('feed');
+const btn = document.getElementById('btnEnviar');
+
+function iniciarComentarios() {
+    if (!localStorage.getItem('comentarios')) {
+        const iniciais = [
+            { nome: 'Pedro', mensagem: 'Muito bom esse perfil!' },
+            { nome: 'Ana', mensagem: 'Curti demais 🔥' },
+            { nome: 'Carlos', mensagem: 'Top demais!' }
+        ];
+
+        localStorage.setItem('comentarios', JSON.stringify(iniciais));
+    }
+}
+
+function renderComentarios() {
+    feed.innerHTML = '';
+
+    const comentarios = JSON.parse(localStorage.getItem('comentarios')) || [];
+
+    comentarios.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'card p-3 mb-3';
+
+        const h = document.createElement('h6');
+        h.textContent = c.nome;
+
+        const p = document.createElement('p');
+        p.textContent = c.mensagem;
+
+        card.appendChild(h);
+        card.appendChild(p);
+
+        feed.appendChild(card);
+    });
+}
+
+btn.addEventListener('click', () => {
+    const nome = document.getElementById('nome').value.trim();
+    const mensagem = document.getElementById('mensagem').value.trim();
+
+    if (!nome || !mensagem) return alert('Preencha tudo');
+
+    const comentarios = JSON.parse(localStorage.getItem('comentarios'));
+
+    comentarios.unshift({ nome, mensagem });
+
+    localStorage.setItem('comentarios', JSON.stringify(comentarios));
+
+    renderComentarios();
+
+    document.getElementById('nome').value = '';
+    document.getElementById('mensagem').value = '';
+});
+
+iniciarComentarios();
+renderComentarios();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
